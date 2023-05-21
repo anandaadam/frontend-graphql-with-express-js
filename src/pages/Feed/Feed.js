@@ -170,6 +170,7 @@ class Feed extends Component {
       .then((result) => result.json())
       .then((fileResponseData) => {
         const imageUrl = fileResponseData.filePath;
+        console.log(123, fileResponseData);
         const graphqlQuery = {
           query: `
             mutation {
