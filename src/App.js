@@ -13,6 +13,7 @@ import LoginPage from "./pages/Auth/Login";
 import SignupPage from "./pages/Auth/Signup";
 import "./App.css";
 import { email } from "./util/validators";
+import auth from "./pages/Auth/Auth";
 
 class App extends Component {
   state = {
@@ -62,13 +63,17 @@ class App extends Component {
     this.setState({ authLoading: true });
     const graphqlQuery = {
       query: `
-        { 
-          login(email: "${authData.email}", password: "${authData.password}") {
+        query UserLogin($email: String!, $password: String!) { 
+          login(email: $email, password: $password) {
             token
             userId
           }
         }
       `,
+      variables: {
+        email: authData.email,
+        password: authData.password,
+      },
     };
 
     fetch("http://localhost:3001/graphql", {
@@ -120,13 +125,18 @@ class App extends Component {
     this.setState({ authLoading: true });
     const graphqlQuery = {
       query: `
-        mutation {
-          createUser(userInput: {email: "${authData.signupForm.email.value}", name: "${authData.signupForm.name.value}", password: "${authData.signupForm.password.value}"}) {
+        mutation UserSignup($email: String!, $name: String!, $password: String!) {
+          createUser(userInput: {email: $email, name: $name, password: $password}) {
             _id
             email
           }
         }
       `,
+      variables: {
+        email: authData.signupForm.email.value,
+        name: authData.signupForm.name.value,
+        password: authData.signupForm.password.value,
+      },
     };
     fetch("http://localhost:3001/graphql", {
       method: "POST",
